@@ -1,12 +1,31 @@
-﻿using System;
+﻿using SFML.Audio;
+using SFML.System;
+using System;
+using System.IO;
 
-namespace AdvantageWars
+
+public class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            Console.WriteLine("Hello World!");
+            Game game = Game.GetInstance();
+            Framerate.InitFrameRateSystem();
+            //init music controller
+            //switch for main menu or gameplay
+            while (game.UpdateWindow())
+            {
+                game.UpdateGame();
+                game.DrawGame();
+            }
+            //reset on frame end
         }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error: " + e.Message);
+            throw;
+        }
+
     }
 }
