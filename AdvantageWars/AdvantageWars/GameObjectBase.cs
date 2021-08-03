@@ -7,8 +7,12 @@ using SFML.System;
 public abstract class GameObjectBase
 {
     protected Texture texture;
-    private Sprite sprite;
+    protected Sprite sprite;
     protected Vector2f currentPosition;
+
+    public GameObjectBase()
+    {
+    }
 
     public GameObjectBase(string texturePath, Vector2f startPosition)
     {

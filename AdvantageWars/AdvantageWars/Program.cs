@@ -18,6 +18,7 @@ public class Program
             {
                 game.UpdateGame();
                 game.DrawGame();
+                Framerate.OnFrameEnd();
             }
             //reset on frame end
         }
