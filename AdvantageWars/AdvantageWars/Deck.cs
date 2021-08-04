@@ -20,17 +20,24 @@ public class Deck
         deck = new List<Card>();
         totalCardsQuantity = 7;
         cardFieldsQuantity = 3;
+        Vector2f cardScale = new Vector2f(0.75f, 0.75f);
         string[] deckInfo = DeckReader.ReadDeckInfoFromFile(deckPath);
         for (int i = 0; i < (totalCardsQuantity * cardFieldsQuantity); i+= cardFieldsQuantity)
         {
             Card c = new Card();
             c.LoadCard(deckInfo, i);
+            c.SetCardSpriteScale(c, cardScale);
             for (int j = 0; j < c.GetCardQuantity(); j++)
             {
                 deck.Add(c);
             }
         }
         currentCardsInDeck = deck.Count;
+    }
+
+    public void Update()
+    {
+        
     }
 
     public Deck Shuffle(Deck mainDeck)

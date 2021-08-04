@@ -12,8 +12,8 @@ public class Program
         try
         {
             Game game = Game.GetInstance();
+            //MusicManager.GetInstance().Play();
             Framerate.InitFrameRateSystem();
-            MusicManager.GetInstance().Play();
 
             //TODO switch for main menu or gameplay
             while (game.UpdateWindow())

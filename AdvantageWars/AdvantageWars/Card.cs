@@ -15,7 +15,6 @@ public class Card : GameObjectBase
 
     public Card(string texturePath, Vector2f startPosition) : base(texturePath, startPosition)
     {
-
     }
 
     public Card LoadCard(string[] lines, int i)
@@ -34,6 +33,11 @@ public class Card : GameObjectBase
     {
         currentPosition = position;
         sprite.Position = currentPosition;
+    }
+
+    public void SetCardSpriteScale(Card card, Vector2f scale)
+    {
+        card.sprite.Scale = scale;
     }
 
     public int GetCardValue()

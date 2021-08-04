@@ -27,13 +27,13 @@ public abstract class Player
                 deckPosition.X = 0 + GameObjectBase.GetSpriteSize(deck.GetCard(0)).X;
                 deckPosition.Y = windowHeight - GameObjectBase.GetSpriteSize(deck.GetCard(0)).Y;
                 deck.SetDeckPosition(deckPosition);
-                handInitialPosition = new Vector2f((windowWidth) / 2, windowHeight);
+                handInitialPosition = new Vector2f((windowWidth) / 10, windowHeight - GameObjectBase.GetSpriteSize(deck.GetCard(0)).Y);
                 break;
             case PlayerID.Opponnent:
                 deckPosition.X = windowWidth - (GameObjectBase.GetSpriteSize(deck.GetCard(0)).X * 2) ;
                 deckPosition.Y = 0;
                 deck.SetDeckPosition(deckPosition);
-                handInitialPosition = new Vector2f((windowWidth) / 2, 0);
+                handInitialPosition = new Vector2f((windowWidth) / 10, 0);
                 break;
             default:
                 break;
@@ -41,6 +41,14 @@ public abstract class Player
         foreach (Card card in deck.GetDeck())
         {
             card.SetCardPosition(deckPosition);
+        }
+    }
+
+    public void Update()
+    {
+        if (deck != null)
+        {
+            deck.Update();
         }
     }
 
@@ -76,5 +84,25 @@ public abstract class Player
     public Deck GetDeck()
     {
         return deck;
+    }
+
+    public List<Card> GetHand()
+    {
+        return hand;
+    }
+
+    public String GetPlayerName()
+    {
+        return name;
+    }
+
+    public int GetCardsLeftInHand()
+    {
+        return hand.Count;
+    }
+
+    public Vector2f GetHandInitialPosition()
+    {
+        return handInitialPosition;
     }
 }
