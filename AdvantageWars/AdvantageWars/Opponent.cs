@@ -5,7 +5,7 @@ using System.Text;
 
 public sealed class Opponent : Player
 {
-    public Opponent(string opponentName, Deck opponentDeck) : base(opponentName, opponentDeck)
+    public Opponent(string opponentName, Deck opponentDeck, PlayerID playerID) : base(opponentName, opponentDeck, playerID)
     {
 
     }

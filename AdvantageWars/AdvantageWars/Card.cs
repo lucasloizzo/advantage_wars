@@ -18,13 +18,24 @@ public class Card : GameObjectBase
 
     }
 
-    public Card LoadCard(Card c, string[] lines, int i)
+    public Card LoadCard(string[] lines, int i)
     {
         this.cardValue = Convert.ToInt32(lines[i]);
         this.cardQuantity = Convert.ToInt32(lines[i + 1]);
         this.texturePath = "../../../" + lines[i + 2];
+        texture = new Texture(texturePath);
+        sprite = new Sprite(texture);
+        //currentPosition = startPosition;
+        //sprite.Position = currentPosition;
         return this;
     }
+
+    public void SetCardPosition(Vector2f position)
+    {
+        currentPosition = position;
+        sprite.Position = currentPosition;
+    }
+
     public int GetCardValue()
     {
         return cardValue;

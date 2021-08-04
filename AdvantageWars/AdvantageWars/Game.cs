@@ -21,6 +21,7 @@ public class Game
         window = new RenderWindow(videoMode, "Blade III");
         window.Closed += CloseWindow;
         window.SetFramerateLimit(Framerate.FRAMERATE_LIMIT);
+        windowSize = window.GetView().Size;
 
         gameplay = new Gameplay();
         //MouseUtils.SetWindow(window);
@@ -39,7 +40,8 @@ public class Game
 
     public void UpdateGame()
     {
-
+        gameplay.Update();
+        windowSize = window.GetView().Size;
     }
 
     public void DrawGame()

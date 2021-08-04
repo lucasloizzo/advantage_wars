@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using SFML.System;
 
 
 public class Deck
 {
     private List<Card> deck;
-    private int currentCardsInDeck;
+    private int currentCardsInDeck; //TODO update value each time a player draws a card
     private int totalCardsQuantity; //number of different cards in the deck
     private int cardFieldsQuantity; //number of attributes of each card in the deck file
+    private Vector2f deckPosition;
 
     public Deck()
     {
@@ -23,7 +24,7 @@ public class Deck
         for (int i = 0; i < (totalCardsQuantity * cardFieldsQuantity); i+= cardFieldsQuantity)
         {
             Card c = new Card();
-            c.LoadCard(c, deckInfo, i);
+            c.LoadCard(deckInfo, i);
             for (int j = 0; j < c.GetCardQuantity(); j++)
             {
                 deck.Add(c);
@@ -64,6 +65,16 @@ public class Deck
         return playerDeck;
     }
 
+    public void SetDeckPosition(Vector2f deckPosition)
+    {
+        this.deckPosition = deckPosition;
+    }
+
+    public void SetCardsLeftInDeck()
+    {
+        currentCardsInDeck = deck.Count;
+    }
+
     public Card GetCard(int index)
     {
         return deck[index];
@@ -72,5 +83,10 @@ public class Deck
     public List<Card> GetDeck()
     {
         return deck;
+    }
+
+    public int GetCardsInDeck()
+    {
+        return currentCardsInDeck;
     }
 }

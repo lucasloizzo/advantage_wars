@@ -2,6 +2,7 @@
 using SFML.System;
 using System;
 using System.IO;
+using SFML.Audio;
 
 
 public class Program
@@ -12,15 +13,15 @@ public class Program
         {
             Game game = Game.GetInstance();
             Framerate.InitFrameRateSystem();
-            //init music controller
-            //switch for main menu or gameplay
+            MusicManager.GetInstance().Play();
+
+            //TODO switch for main menu or gameplay
             while (game.UpdateWindow())
             {
                 game.UpdateGame();
                 game.DrawGame();
                 Framerate.OnFrameEnd();
             }
-            //reset on frame end
         }
         catch (Exception e)
         {
