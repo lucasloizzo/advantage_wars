@@ -24,12 +24,7 @@ public class Game
         windowSize = window.GetView().Size;
 
         gameplay = new Gameplay();
-        //MouseUtils.SetWindow(window);
-    }
-
-    public void Play()
-    {
-        gameplay.Play();
+        MouseUtils.SetWindow(window);
     }
 
     private void CloseWindow(object sender, EventArgs e)

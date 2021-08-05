@@ -17,5 +17,16 @@ public static class MouseUtils
         startCenter = window.GetView().Center;
     }
 
+    public static bool MouseOver(FloatRect perimeter)
+    {
+        Vector2i relativeMousePosition = Mouse.GetPosition(window);
+        Vector2f cammeraOffset = window.GetView().Center - startCenter;
+        relativeMousePosition += (Vector2i)cammeraOffset;
+        return perimeter.Contains(relativeMousePosition.X, relativeMousePosition.Y);
+    }
 
+    public static bool ClickOn(FloatRect perimeter, Mouse.Button button)
+    {
+        return MouseOver(perimeter) && Mouse.IsButtonPressed(button);
+    }
 }

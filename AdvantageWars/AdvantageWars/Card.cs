@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using System;
-
+using SFML.Window;
 
 public class Card : GameObjectBase
 {
@@ -15,6 +15,7 @@ public class Card : GameObjectBase
 
     public Card(string texturePath, Vector2f startPosition) : base(texturePath, startPosition)
     {
+        sprite.Scale = new Vector2f(0.75f, 0.75f);
     }
 
     public Card LoadCard(string[] lines, int i)
@@ -24,9 +25,20 @@ public class Card : GameObjectBase
         this.texturePath = "../../../" + lines[i + 2];
         texture = new Texture(texturePath);
         sprite = new Sprite(texture);
-        //currentPosition = startPosition;
-        //sprite.Position = currentPosition;
         return this;
+    }
+
+    public override void Update()
+    {
+    }
+
+    public bool CardClicked()
+    {
+        if (MouseUtils.ClickOn(GetBounds(), Mouse.Button.Left))
+        {
+            return true;
+        }
+        return false;
     }
 
     public void SetCardPosition(Vector2f position)

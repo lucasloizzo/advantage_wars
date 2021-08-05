@@ -39,5 +39,15 @@ public abstract class GameObjectBase
         Vector2f spriteSize = new Vector2f(spritewidth, spriteHeight);
         return spriteSize;
     }
+
+    public Vector2f GetPosition()
+    {
+        return currentPosition;
+    }
+
+    public FloatRect GetBounds()
+    {
+        return sprite.GetGlobalBounds();
+    }
 }
 

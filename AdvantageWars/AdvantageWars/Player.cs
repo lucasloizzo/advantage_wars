@@ -11,6 +11,7 @@ public abstract class Player
     protected int handSize;
     protected List<Card> cardsInPlay;
     protected int points;
+    Vector2f deckPosition;
 
     public Player(string playerName, Deck playerDeck, PlayerID playerID)
     {
@@ -24,7 +25,7 @@ public abstract class Player
         this.hand = SortHand(hand);
         float windowWidth = Game.GetWindowSize().X;
         float windowHeight = Game.GetWindowSize().Y;
-        Vector2f deckPosition = new Vector2f();
+        deckPosition = new Vector2f();
         switch (playerID)
         {
             case PlayerID.User:
@@ -85,6 +86,24 @@ public abstract class Player
         return hand;
     }
 
+    public void PlayCardFromDeck(Card card, int index, Vector2f position)
+    {
+        card.SetCardPosition(position);
+        cardsInPlay.Add(card);
+        deck.GetDeck().RemoveAt(index);
+    }
+    
+    public void PlayCardFromHand(Card card)
+    {
+
+    }
+
+    public Card GetNextCardInDeck(Player player)
+    {
+        //return the next card on deck to draw
+        return player.GetDeck().GetCard(player.GetDeck().GetCardsInDeck() - 1);
+    }
+
     public int GetPoints()
     {
         foreach (Card card in cardsInPlay)
@@ -102,6 +121,11 @@ public abstract class Player
     public Deck GetDeck()
     {
         return deck;
+    }
+
+    public Vector2f GetDeckPosition()
+    {
+        return deckPosition;
     }
 
     public List<Card> GetHand()
