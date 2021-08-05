@@ -7,13 +7,17 @@ public abstract class Player
     protected string name;
     protected Deck deck;
     protected List<Card> hand;
-    public Vector2f handInitialPosition;
+    protected Vector2f handInitialPosition;
     protected int handSize;
+    protected List<Card> cardsInPlay;
+    protected int points;
 
     public Player(string playerName, Deck playerDeck, PlayerID playerID)
     {
         handSize = 10;
+        points = 0;
         hand = new List<Card>();
+        cardsInPlay = new List<Card>();
         this.name = playerName;
         this.deck = playerDeck;
         this.hand = InitialHand(playerDeck);
@@ -79,6 +83,20 @@ public abstract class Player
             }
         }
         return hand;
+    }
+
+    public int GetPoints()
+    {
+        foreach (Card card in cardsInPlay)
+        {
+            this.points += card.GetCardValue();
+        }
+        return points;
+    }
+
+    public string GetStringPoints()
+    {
+        return Convert.ToString(GetPoints());
     }
 
     public Deck GetDeck()

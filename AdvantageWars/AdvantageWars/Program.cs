@@ -20,6 +20,7 @@ public class Program
             {
                 game.UpdateGame();
                 game.DrawGame();
+                game.Play();
                 Framerate.OnFrameEnd();
             }
         }

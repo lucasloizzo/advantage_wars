@@ -27,6 +27,11 @@ public class Game
         //MouseUtils.SetWindow(window);
     }
 
+    public void Play()
+    {
+        gameplay.Play();
+    }
+
     private void CloseWindow(object sender, EventArgs e)
     {
         window.Close();
