@@ -12,14 +12,18 @@ public class Program
         try
         {
             Game game = Game.GetInstance();
+            //TODO ACTIVAR AUDIO ANTES DE ENTREGA
             //MusicManager.GetInstance().Play();
             Framerate.InitFrameRateSystem();
 
-            //TODO switch for main menu or gameplay
             while (game.UpdateWindow())
             {
-                game.UpdateGame();
-                game.DrawGame();
+                if (!Game.GetPauseStatus())
+                {
+                    game.UpdateGame();
+                    game.CheckGarbage();
+                    game.DrawGame();
+                }
                 Framerate.OnFrameEnd();
             }
         }

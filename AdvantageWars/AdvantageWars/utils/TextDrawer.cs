@@ -36,5 +36,10 @@ public class Title
     {
         title.Draw(window, RenderStates.Default);
     }
+
+    public void SetNewText(string newtext)
+    {
+        title.DisplayedString = newtext;
+    }
 }
 

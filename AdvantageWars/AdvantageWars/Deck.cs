@@ -37,7 +37,10 @@ public class Deck
 
     public void Update()
     {
-        
+        if (deck != null)
+        {
+            
+        }
     }
 
     public Deck Shuffle(Deck mainDeck)

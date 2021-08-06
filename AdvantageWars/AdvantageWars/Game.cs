@@ -11,6 +11,7 @@ public class Game
     private Gameplay gameplay;
     private static Vector2f windowSize;
     private RenderWindow window;
+    private static bool pause;
 
     public Game()
     {
@@ -24,7 +25,13 @@ public class Game
         windowSize = window.GetView().Size;
 
         gameplay = new Gameplay();
+        pause = false;
         MouseUtils.SetWindow(window);
+    }
+
+    public static void SetPause()
+    {
+        pause = true;
     }
 
     private void CloseWindow(object sender, EventArgs e)
@@ -50,6 +57,11 @@ public class Game
         window.Display();
     }
 
+    public void CheckGarbage()
+    {
+        gameplay.CheckGarbage();
+    }
+
     public static Vector2f GetWindowSize()
     {
         return windowSize;
@@ -62,6 +74,11 @@ public class Game
             instance = new Game();
         }
         return instance;
+    }
+
+    public static bool GetPauseStatus()
+    {
+        return pause;
     }
 }
 

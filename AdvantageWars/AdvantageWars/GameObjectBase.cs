@@ -9,9 +9,11 @@ public abstract class GameObjectBase
     protected Texture texture;
     protected Sprite sprite;
     protected Vector2f currentPosition;
+    public bool toDelete;
 
     public GameObjectBase()
     {
+        toDelete = false;
     }
 
     public GameObjectBase(string texturePath, Vector2f startPosition)
@@ -20,6 +22,14 @@ public abstract class GameObjectBase
         sprite = new Sprite(texture);
         currentPosition = startPosition;
         sprite.Position = currentPosition;
+        toDelete = false;
+    }
+
+    public virtual void Delete()
+    {
+        sprite.Dispose();
+        texture.Dispose();
+        toDelete = true;
     }
 
     public virtual void Update()

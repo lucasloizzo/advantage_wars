@@ -30,12 +30,14 @@ public class Card : GameObjectBase
 
     public override void Update()
     {
+
     }
 
     public bool CardClicked()
     {
         if (MouseUtils.ClickOn(GetBounds(), Mouse.Button.Left))
         {
+            Console.WriteLine("clicked");
             return true;
         }
         return false;
