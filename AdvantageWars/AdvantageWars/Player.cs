@@ -23,7 +23,6 @@ public abstract class Player
         this.name = playerName;
         this.deck = playerDeck;
         this.hand = InitialHand(playerDeck);
-        this.hand = SortHand(hand);
         float windowWidth = Game.GetWindowSize().X;
         float windowHeight = Game.GetWindowSize().Y;
         deckPosition = new Vector2f();
@@ -33,8 +32,8 @@ public abstract class Player
                 deckPosition.X = 0 + GameObjectBase.GetSpriteSize(deck.GetCard(0)).X;
                 deckPosition.Y = windowHeight - GameObjectBase.GetSpriteSize(deck.GetCard(0)).Y;
                 deck.SetDeckPosition(deckPosition);
-                handInitialPosition = new Vector2f(windowWidth / 10, windowHeight - GameObjectBase.GetSpriteSize(deck.GetCard(0)).Y);
-                boardInitialPosition = new Vector2f(windowWidth / 2, windowHeight / 2);
+                handInitialPosition = new Vector2f(windowWidth / 6, windowHeight - GameObjectBase.GetSpriteSize(deck.GetCard(0)).Y);
+                boardInitialPosition = new Vector2f(windowWidth / 2 + 120.0f, windowHeight / 2);
                 break;
             case PlayerID.Opponnent:
                 deckPosition.X = windowWidth - (GameObjectBase.GetSpriteSize(deck.GetCard(0)).X * 2) ;
@@ -46,6 +45,9 @@ public abstract class Player
             default:
                 break;
         }
+        this.hand = SortHand(hand);
+        this.hand = UpdateHandPosition(hand);
+
         foreach (Card card in deck.GetDeck())
         {
             card.SetCardPosition(deckPosition);
@@ -61,6 +63,7 @@ public abstract class Player
         if (hand != null)
         {
             //update hand position and order
+            hand = UpdateHandPosition(hand);
         }
     }
 
@@ -91,6 +94,20 @@ public abstract class Player
         return hand;
     }
 
+    public List<Card> UpdateHandPosition(List<Card> hand)
+    {
+        Vector2f cardPosition = handInitialPosition;
+
+
+        for (int i = 0; i < hand.Count; i++)
+        {  
+            hand[i].SetCardPosition(cardPosition);
+            cardPosition.X += GameObjectBase.GetSpriteSize(hand[i]).X;
+        }
+
+        return hand;
+    }
+
     public List<Card> SortHand(List<Card> hand)
     {
         Card temp = new Card();
@@ -106,6 +123,7 @@ public abstract class Player
                 }
             }
         }
+
         return hand;
     }
 

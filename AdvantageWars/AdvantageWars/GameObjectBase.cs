@@ -52,7 +52,7 @@ public abstract class GameObjectBase
 
     public Vector2f GetPosition()
     {
-        return currentPosition;
+        return sprite.Position;
     }
 
     public FloatRect GetBounds()

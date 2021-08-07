@@ -12,8 +12,7 @@ public class Program
         try
         {
             Game game = Game.GetInstance();
-            //TODO ACTIVAR AUDIO ANTES DE ENTREGA
-            //MusicManager.GetInstance().Play();
+            MusicManager.GetInstance().Play();
             Framerate.InitFrameRateSystem();
 
             while (game.UpdateWindow())

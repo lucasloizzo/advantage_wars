@@ -22,16 +22,18 @@ public class Deck
         cardFieldsQuantity = 3;
         Vector2f cardScale = new Vector2f(0.75f, 0.75f);
         string[] deckInfo = DeckReader.ReadDeckInfoFromFile(deckPath);
-        for (int i = 0; i < (totalCardsQuantity * cardFieldsQuantity); i+= cardFieldsQuantity)
+
+        for (int i = 0; i < (totalCardsQuantity * cardFieldsQuantity); i += cardFieldsQuantity)
         {
-            Card c = new Card();
-            c.LoadCard(deckInfo, i);
-            c.SetCardSpriteScale(c, cardScale);
-            for (int j = 0; j < c.GetCardQuantity(); j++)
+            for (int j = 0; j < Convert.ToInt32(deckInfo[i + 1]); j++)
             {
-                deck.Add(c);
+                Card newCard = new Card();
+                newCard.LoadCard(deckInfo, i);
+                newCard.SetCardSpriteScale(newCard, cardScale);
+                deck.Add(newCard);
             }
         }
+
         currentCardsInDeck = deck.Count;
     }
 

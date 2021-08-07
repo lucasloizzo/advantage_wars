@@ -17,6 +17,9 @@ public class Gameplay
     private Title opponentName;
     private Title opponentPoints;
     private Card opponentDeckBack;
+    private Title winner;
+    private Board winnerScreen;
+    private float moveTime;
 
     public Gameplay()
     {
@@ -37,18 +40,9 @@ public class Gameplay
         opponentPoints.SetSize(72);
         opponentPoints.SetStyle(1);
         opponentDeckBack = new Card(".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "resources" + Path.DirectorySeparatorChar + "assets" + Path.DirectorySeparatorChar + "cardback.png", new Vector2f(opponent.GetDeckPosition().X, opponent.GetDeckPosition().Y));
-        //TODO delete mainDeck
-    }
 
-    public bool CheckBoardState()
-    {
-        return true;
-    }
-
-    public PlayerID CheckTurnOrder()
-    {
-        //ver si se hace en turn manager
-        return PlayerID.User;
+        winnerScreen = new Board(".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "resources" + Path.DirectorySeparatorChar + "assets" + Path.DirectorySeparatorChar + "winnerscreen.png", new Vector2f());
+        moveTime = 2.0f;
     }
 
     public void CheckGarbage()
@@ -74,99 +68,89 @@ public class Gameplay
             opponent.Update();
         }
 
-        //Empy board or stalemate check
+        //Empty board or stalemate check
         if (user.GetPoints() == opponent.GetPoints())
         {
+            if (opponent.GetDeck().GetCardsInDeck() == 0 && user.GetDeck().GetCardsInDeck() == 0)
+            {
+                winner = new Title("Draw!", new Vector2f(750.0f, 530.0f), Color.Cyan);
+                winner.SetSize(72);
+                winner.SetStyle(1);
+                Game.SetPause();
+            }
             if (userDeckBack.CardClicked() == true && user.GetClickRate() >= 1) //check si clickeo deck
             {
-                //if (user.GetCardsInPlay().Count > 0)
-                //{
-                //    user.ClearBoard();
-                //}
-                //if (opponent.GetCardsInPlay().Count > 0)
-                //{
-                //    opponent.ClearBoard();
-                //}
                 user.ResetClickRate();
 
+                
                 if (opponent.GetDeck().GetCardsInDeck() <= 0)
                 {
-                    Console.WriteLine("You Win!");
-                    Game.SetPause();
+                    CheckWinner(user, opponent);
                 }
                 else if (user.GetDeck().GetCardsInDeck() <= 0)
                 {
-                    Console.WriteLine("You Lost!");
-                    Game.SetPause();
+                    CheckWinner(opponent, user);
                 }
 
-                //move card from top of deck to play
-                user.PlayCardFromDeck(user.GetNextCardInDeck(user), user.GetDeck().GetCardsInDeck() - 1, new Vector2f(1050.0f, 580.0f));
-                //do the same for opponent
-                opponent.PlayCardFromDeck(opponent.GetNextCardInDeck(opponent), opponent.GetDeck().GetCardsInDeck() - 1, new Vector2f(850.0f, 380.0f));
-                //update scores
-                Console.WriteLine("User = " + user.GetPoints());
-                Console.WriteLine("Opp = " + opponent.GetPoints());
+                if (moveTime >= 2)
+                {
+                    //move card from top of deck to play
+                    user.PlayCardFromDeck(user.GetNextCardInDeck(user), user.GetDeck().GetCardsInDeck() - 1, new Vector2f(1050.0f, 580.0f));
+                    //do the same for opponent
+                    opponent.PlayCardFromDeck(opponent.GetNextCardInDeck(opponent), opponent.GetDeck().GetCardsInDeck() - 1, new Vector2f(850.0f, 380.0f));
+                    moveTime = 0;
+                }
             }
         }
         //Opponent turn check
         else if (user.GetPoints() > opponent.GetPoints())
         {
-            //empieza oponente
-            //si no puede jugar, pierde
             if (opponent.GetCardsLeftInHand() > 0)
             {
-                int cardToPlayIndex = opponent.UpdateState(opponent, user.GetCardsLeftInHand());
-                opponent.PlayCardFromHand(opponent.GetCardInHand(cardToPlayIndex), cardToPlayIndex, opponent.GetBoardInitialPosition());
-                Console.WriteLine("User = " + user.GetPoints());
-                Console.WriteLine("Opp = " + opponent.GetPoints());
+                if (moveTime >= 2)
+                {
+                    int cardToPlayIndex = opponent.UpdateState(opponent, user.GetCardsLeftInHand(), user.GetPoints());
+                    opponent.PlayCardFromHand(opponent.GetCardInHand(cardToPlayIndex), cardToPlayIndex, opponent.GetBoardInitialPosition());
+                    CheckWinner(opponent, user);
+                    moveTime = 0;
+                }
             }
             else
             {
-                Console.WriteLine("You Win!");
-                Game.SetPause();
+                CheckWinner(opponent, user);
             }
-            //mover carta a board
-            //sacarla de la mano
-            //check si perdio (points < user)
-            //pausar juego
         }
         //User turn check
         else if(user.GetPoints() < opponent.GetPoints())
         {
-            //empieza user
-            //si no puede jugar, pierde
             if (user.GetCardsLeftInHand() > 0) { 
                 for (int i = 0; i < user.GetHand().Count; i++)
                 {
-                    if (user.GetCardInHand(i).CardClicked() == true && user.GetClickRate() >= 1)
+                    if (user.GetCardInHand(i).CardClicked() == true) // && user.GetClickRate() >= 1
                     {
-                        //mover carta a board
                         user.ResetClickRate();
-                        user.PlayCardFromHand(user.GetCardInHand(i), i, user.GetBoardInitialPosition()); //new Vector2f(1050.0f, 580.0f)
-                        //sacarla de la mano
-                        //check si perdi (points < enemigo)
-                        Console.WriteLine("User = " + user.GetPoints());
-                        Console.WriteLine("Opp = " + opponent.GetPoints());
-                        CheckWinner(user.GetPoints(), opponent.GetPoints());
-                        //pausar juego
+                        user.PlayCardFromHand(user.GetCardInHand(i), i, user.GetBoardInitialPosition());
+                        moveTime = 0;
+                        CheckWinner(user, opponent);
                     }
                 }
             }
             else
             {
-                Console.WriteLine("You Lost");
-                Game.SetPause();
+                CheckWinner(user, opponent);
             }
         }
+        moveTime += Framerate.GetDeltaTime();
         user.ClickRateCooldown();
     }
 
-    public void CheckWinner(int lastPlayed, int target)
+    public void CheckWinner(Player casterPlayer, Player targetPlayer)
     {
-        if (lastPlayed < target)
+        if (casterPlayer.GetPoints() < targetPlayer.GetPoints())
         {
-            Console.WriteLine("You Lost!");
+            winner = new Title(targetPlayer.GetPlayerName() + " Won!", new Vector2f(750.0f, 530.0f), Color.Cyan);
+            winner.SetSize(72);
+            winner.SetStyle(1);
             Game.SetPause();
         }
     }
@@ -184,51 +168,35 @@ public class Gameplay
             opponentName.Draw(window);
         }
 
-        //TODO update points and convert to string
         userPoints.SetNewText(user.GetStringPoints());
         opponentPoints.SetNewText(opponent.GetStringPoints());
 
         userPoints.Draw(window);
         opponentPoints.Draw(window);
 
-        //TODO create a single function to minimize code
+        //Draw deck if cards left
         if (user.GetDeck().GetCardsInDeck() > 0)
         {
-            //user.GetNextCardInDeck(user).Draw(window);
             userDeckBack.Draw(window);
         }
         if (opponent.GetDeck().GetCardsInDeck() > 0)
         {
-            //opponent.GetNextCardInDeck(opponent).Draw(window);
             opponentDeckBack.Draw(window);
         }
 
         //TODO create a single function to minimize code
         if (user.GetCardsLeftInHand() > 0)
         {
-            List<Card> userHand = new List<Card>();
-            Vector2f nextPosition = new Vector2f();
-            userHand = user.GetHand();
-            nextPosition = user.GetHandInitialPosition(); //set initial position
-            foreach (Card card in userHand)
+            foreach (Card card in user.GetHand())
             {
-                //set next position
-                nextPosition.X += GameObjectBase.GetSpriteSize(card).X;
-                card.SetCardPosition(nextPosition);
                 card.Draw(window);
             }
         }
         if (opponent.GetCardsLeftInHand() > 0)
         {
-            List<Card> userHand = new List<Card>();
-            Vector2f nextPosition = new Vector2f();
-            userHand = opponent.GetHand();
-            nextPosition = opponent.GetHandInitialPosition(); //set initial position
-            foreach (Card card in userHand)
+
+            foreach (Card card in opponent.GetHand())
             {
-                //set next position
-                nextPosition.X += GameObjectBase.GetSpriteSize(card).X;
-                card.SetCardPosition(nextPosition);
                 card.Draw(window);
             }
         }
@@ -236,13 +204,9 @@ public class Gameplay
         if (user.GetCardsInPlay().Count > 0 && user.GetCardsInPlay() != null)
         {
             List<Card> userBoard = new List<Card>();
-            //Vector2f nextPosition = new Vector2f();
             userBoard = user.GetCardsInPlay();
-            //nextPosition = user.GetBoardInitialPosition(); //set initial position
             foreach (Card card in userBoard)
             {
-                //set next position
-                //nextPosition.X += GameObjectBase.GetSpriteSize(card).X;
                 card.SetCardPosition(user.GetBoardInitialPosition());
                 card.Draw(window);
             }
@@ -250,16 +214,19 @@ public class Gameplay
         if (opponent.GetCardsInPlay().Count > 0 && opponent.GetCardsInPlay() != null)
         {
             List<Card> opponentBoard = new List<Card>();
-            //Vector2f nextPosition = new Vector2f();
             opponentBoard = opponent.GetCardsInPlay();
-            //nextPosition = opponent.GetBoardInitialPosition(); //set initial position
             foreach (Card card in opponentBoard)
             {
-                //set next position
                 card.SetCardPosition(opponent.GetBoardInitialPosition());
                 card.Draw(window);
-                //nextPosition.X -= GameObjectBase.GetSpriteSize(card).X;
             }
+        }
+
+        //Draw winner screen
+        if (winner != null)
+        {
+            winnerScreen.Draw(window);
+            winner.Draw(window);
         }
     }
 }

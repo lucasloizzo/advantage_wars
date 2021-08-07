@@ -2,6 +2,8 @@
 using SFML.System;
 using System;
 using SFML.Window;
+using System.IO;
+using System.Collections.Generic;
 
 public class Card : GameObjectBase
 {
@@ -22,7 +24,7 @@ public class Card : GameObjectBase
     {
         this.cardValue = Convert.ToInt32(lines[i]);
         this.cardQuantity = Convert.ToInt32(lines[i + 1]);
-        this.texturePath = "../../../" + lines[i + 2];
+        this.texturePath = (".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + lines[i + 2]);
         texture = new Texture(texturePath);
         sprite = new Sprite(texture);
         return this;
@@ -30,23 +32,23 @@ public class Card : GameObjectBase
 
     public override void Update()
     {
-
+      base.Update();
     }
 
     public bool CardClicked()
     {
         if (MouseUtils.ClickOn(GetBounds(), Mouse.Button.Left))
         {
-            Console.WriteLine("clicked");
             return true;
         }
         return false;
     }
 
-    public void SetCardPosition(Vector2f position)
+
+    public void SetCardPosition(Vector2f cardPosition)
     {
-        currentPosition = position;
-        sprite.Position = currentPosition;
+        currentPosition = cardPosition;
+        sprite.Position = cardPosition;
     }
 
     public void SetCardSpriteScale(Card card, Vector2f scale)
